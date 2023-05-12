@@ -1,10 +1,19 @@
 
 #include <iostream>
 
-using namespace std;
+#include "OrderBook.h"
+#include "Order.h"
+#include "Limit.h"
 
-int main(int argc, char *argv[])
+void testAdd() {
+    OrderBook book;
+    Order o = Order(0, false, 10, 9, 0, 0, nullptr, nullptr, nullptr);
+    book.addOrder(o);
+    // std::cout << "Hello World" << std::endl;
+}
+
+int main()
 {
-    cout << "Hello World" << endl;
+    testAdd();
     return 0;
 }

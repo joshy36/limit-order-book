@@ -5,11 +5,12 @@ CXX      = clang++
 CXXFLAGS = -g3  -std=c++11 -Wall -Wextra  -Wpedantic -Wshadow
 LDFLAGS  = -g3
 
-OrderBook: main.o
+main: main.o OrderBook.o
 	${CXX} -o $@ $^
 
-%.o: %.cpp ${INCLUDES}
-	${CXX} ${CXXFLAGS} -c $<
+# %.o: %.cpp ${INCLUDES}
+# 	${CXX} ${CXXFLAGS} -c $<
+OrderBook.o:     OrderBook.cpp OrderBook.h
 
 clean:
 	rm -rf ${EXECS} *.o *.dSYM

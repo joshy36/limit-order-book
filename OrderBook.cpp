@@ -49,12 +49,43 @@ void OrderBook::addOrder(Order &o)
         std::cout << "Limit in book, add to linked list instead" << limits->at(o.limit).size << std::endl;
     } catch (const std::out_of_range& e) {
         std::cout << "Add limit to book" << std::endl;
-        Limit l = Limit(o.limit, o.shares, 0, &o, &o);
+        std::list<Order> orderList;
+        orderList.push_back(o);
+        Limit l = Limit(o.limit, o.shares, 0, orderList);
         if (o.buyOrSell)
             buySide->insert(std::make_pair(l.limitPrice, l));
         else
             sellSide->insert(std::make_pair(l.limitPrice, l));
-            
     }
-    
+}
+
+/*
+ * printBook
+ * Purpose: Print the order book, used for testing and debugging.
+ * Parameters: None.
+ * Returns: Nothing.
+ */
+void OrderBook::print() const
+{
+    std::cout << "Sell Side\n" << "--------" << std::endl;
+    for (const auto& pair : *sellSide) {
+        for (auto i : pair.second.orders) {
+            std::cout << "Price: "       << i.limit 
+                      << ", Id: "        << i.idNumber 
+                      << ", Shares: "    << i.shares 
+                      << ", Timestamp: " << i.entryTime 
+                      << std::endl;
+        }
+    }
+    std::cout << "~~~Spread~~~" << std::endl;
+    for (const auto& pair : *buySide) {
+        for (auto i : pair.second.orders) {
+            std::cout << "Price: "       << i.limit 
+                      << ", Id: "        << i.idNumber 
+                      << ", Shares: "    << i.shares 
+                      << ", Timestamp: " << i.entryTime 
+                      << std::endl;
+        }
+    }
+    std::cout << "--------" << "Buy Side\n\n" << std::endl;
 }

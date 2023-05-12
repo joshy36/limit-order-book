@@ -26,6 +26,8 @@ class OrderBook {
         int getBestBid() const;
         int getBestOffer() const;
 
+        void print() const;
+
     private:
         std::map<int, Limit> *buySide;
         std::map<int, Limit, std::greater<int>> *sellSide;

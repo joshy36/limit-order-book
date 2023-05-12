@@ -8,8 +8,6 @@ LDFLAGS  = -g3
 main: main.o OrderBook.o
 	${CXX} -o $@ $^
 
-# %.o: %.cpp ${INCLUDES}
-# 	${CXX} ${CXXFLAGS} -c $<
 OrderBook.o:     OrderBook.cpp OrderBook.h
 
 clean:

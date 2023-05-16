@@ -48,14 +48,14 @@ void OrderBook::addOrder(const Order &o)
         // insert order into map
         orders->insert(std::make_pair(o.limit, o));
         // update size
-        std::cout << limits->at(o.limit).size << std::endl;
+        std::cout << limits->at(o.limit).totalVolume << std::endl;
         std::cout << o.shares << std::endl;
-        limits->at(o.limit).size += o.shares;
-        std::cout << limits->at(o.limit).size << std::endl;
+        limits->at(o.limit).totalVolume += o.shares;
+        std::cout << limits->at(o.limit).totalVolume << std::endl;
     } catch (const std::out_of_range& e) {
         std::cout << "Add limit to book" << std::endl;
         // create the new limit
-        Limit l = Limit(o.limit, o.shares);
+        Limit l = Limit(o.limit);
         // insert the limit into map, and order into map
         limits->insert(std::make_pair(l.limitPrice, l));
         orders->insert(std::make_pair(o.limit, o));
@@ -77,14 +77,21 @@ void OrderBook::addOrder(const Order &o)
 void OrderBook::print() const
 {
     int columnWidth = 10;
-    std::cout << std::setw(columnWidth) << std::left << "Price" << "|" << std::setw(columnWidth) << "Id" << "|" << std::setw(columnWidth) << "Shares" << "|" << std::setw(columnWidth) << "Timestamp" << std::endl;
-    std::cout << std::setfill('-') << std::setw(columnWidth * 4 + 2) << "" << std::setfill(' ') << std::endl;
+    std::cout << std::setw(columnWidth) << std::left << "Price" << "|" 
+              << std::setw(columnWidth) << "Id" << "|" 
+              << std::setw(columnWidth) << "Shares" << "|" 
+              << std::setw(columnWidth) << "Timestamp" 
+              << std::endl;
+    std::cout << std::setfill('-') << std::setw(columnWidth * 4 + 2) << "" 
+              << std::setfill(' ') << std::endl;
     for (const auto& pair : *sellSide)
         printOrderHelper(pair.second.orders, columnWidth);
-    std::cout << std::setfill('-') << std::setw(columnWidth * 4 + 2) << "" << std::setfill(' ') << std::endl;
+    std::cout << std::setfill('-') << std::setw(columnWidth * 4 + 2) << "" 
+              << std::setfill(' ') << std::endl;
     for (const auto& pair : *buySide)
         printOrderHelper(pair.second.orders, columnWidth);
-    std::cout << std::setfill('-') << std::setw(columnWidth * 4 + 2) << "" << std::setfill(' ') << std::endl;
+    std::cout << std::setfill('-') << std::setw(columnWidth * 4 + 2) << "" 
+              << std::setfill(' ') << std::endl << std::endl;
 }
 
 /*
@@ -96,14 +103,18 @@ void OrderBook::print() const
 void OrderBook::printLimit() const
 {
     int columnWidth = 10;
-    std::cout << std::setw(columnWidth) << std::left << "Price" << "|" << std::setw(columnWidth) << "Size" << "|" << std::setw(columnWidth) << "Total Vol" << std::endl;
-    std::cout << std::setfill('-') << std::setw(columnWidth * 3 + 2) << "" << std::setfill(' ') << std::endl;
+    std::cout << std::setw(columnWidth) << std::left << "Price" << "|" 
+              << std::setw(columnWidth) << "Total Vol" << std::endl;
+    std::cout << std::setfill('-') << std::setw(columnWidth * 2 + 2) << "" 
+              << std::setfill(' ') << std::endl;
     for (const auto& pair : *sellSide) 
         printLimitHelper(pair.second, columnWidth);
-    std::cout << std::setfill('-') << std::setw(columnWidth * 3 + 2) << "" << std::setfill(' ') << " Print Spread here" << std::endl;
+    std::cout << std::setfill('-') << std::setw(columnWidth * 2 + 2) << "" 
+              << std::setfill(' ') << " Print Spread here" << std::endl;
     for (const auto& pair : *buySide) 
         printLimitHelper(pair.second, columnWidth);
-    std::cout << std::setfill('-') << std::setw(columnWidth * 3 + 2) << "" << std::setfill(' ') << std::endl;
+    std::cout << std::setfill('-') << std::setw(columnWidth * 2 + 2) 
+              << "" << std::setfill(' ') << std::endl << std::endl;
 }
 
 void OrderBook::printLimitHelper(const Limit& limit, int columnWidth) const
@@ -111,28 +122,18 @@ void OrderBook::printLimitHelper(const Limit& limit, int columnWidth) const
     std::string red = "\033[31m";
     std::string green = "\033[32m";
     std::string reset = "\033[0m";
-    std::cout << std::setw(columnWidth)
-              << limit.limitPrice <<  "|"
-              << std::setw(columnWidth) 
-              << std::fixed 
-              << limit.size << "|"
-              << std::setw(columnWidth) 
-              << limit.totalVolume
+    std::cout << std::setw(columnWidth) << limit.limitPrice <<  "|"
+              << std::setw(columnWidth) << limit.totalVolume << "|"
               << std::endl;
 }
 
 void OrderBook::printOrderHelper(const std::list<Order>* listPtr, int columnWidth) const
 {
     for (const Order& i : *listPtr) {
-        std::cout << std::setw(columnWidth)
-                  << i.limit <<  "|"
-                  << std::setw(columnWidth) 
-                  << std::fixed 
-                  << i.idNumber << "|"
-                  << std::setw(columnWidth) 
-                  << i.shares << "|"
-                  << std::setw(columnWidth) 
-                  << i.entryTime
+        std::cout << std::setw(columnWidth) << i.limit <<  "|"
+                  << std::setw(columnWidth) << i.idNumber << "|"
+                  << std::setw(columnWidth) << i.shares << "|"
+                  << std::setw(columnWidth) << i.entryTime
                   << std::endl;
     }
 }

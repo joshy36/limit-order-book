@@ -13,16 +13,14 @@
 struct Order;
 
 struct Limit {
-    int              limitPrice;
-    int              size;
-    int              totalVolume;
+    double           limitPrice;
+    double           totalVolume;
     std::list<Order> *orders;
 
-    Limit(int _limitPrice, int _size) :
-      limitPrice (_limitPrice),
-      size       (_size),
-      totalVolume(0),
-      orders(new std::list<Order>) {}
+    Limit(double _limitPrice) :
+        limitPrice (_limitPrice),
+        totalVolume(0),
+        orders(new std::list<Order>) {}
 
     // ~Limit()
     // {

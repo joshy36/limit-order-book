@@ -17,7 +17,7 @@ class OrderBook {
         OrderBook();
         ~OrderBook();
 
-        void addOrder(Order &o);
+        void addOrder(const Order &o);
         void cancelOrder(int idNumber);
         // execute or market order?
 
@@ -27,10 +27,10 @@ class OrderBook {
         int getBestOffer() const;
 
         void print() const;
-
+        void printList(const std::list<Order>* listPtr) const;
     private:
-        std::map<int, Limit> *buySide;
         std::map<int, Limit, std::greater<int>> *sellSide;
+        std::map<int, Limit, std::greater<int>> *buySide;
         std::unordered_map<int, Order> *orders;
         std::unordered_map<int, Limit> *limits;
 

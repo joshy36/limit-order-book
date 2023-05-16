@@ -29,8 +29,8 @@ void testAdd() {
     book.addOrder(orderGenerator(Order::BUY, 5, 4.3));
     book.addOrder(orderGenerator(Order::BUY, 6, 6.11));
     book.addOrder(orderGenerator(Order::BUY, 7, 6));
-    book.addOrder(orderGenerator(Order::SELL, 2, 9.2));
-    book.addOrder(orderGenerator(Order::SELL, 2, 5.0));
+    book.addOrder(orderGenerator(Order::SELL, 2, 5.2));
+    book.addOrder(orderGenerator(Order::SELL, 2, 5.2));
     book.print();
     book.printLimit();
     resetOrders();

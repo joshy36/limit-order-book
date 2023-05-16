@@ -13,10 +13,10 @@
  */
 OrderBook::OrderBook()
 {
-    sellSide   = new std::map<int, Limit, std::greater<int>>;
-    buySide    = new std::map<int, Limit, std::greater<int>>;
-    orders     = new std::unordered_map<int, Order>;
-    limits     = new std::unordered_map<int, Limit>;
+    sellSide   = new std::map<double, Limit, std::greater<double>>;
+    buySide    = new std::map<double, Limit, std::greater<double>>;
+    orders     = new std::unordered_map<double, Order>;
+    limits     = new std::unordered_map<double, Limit>;
     lowestSell = nullptr;
     highestBuy = nullptr;
 }
@@ -59,7 +59,7 @@ void OrderBook::addOrder(const Order &o)
         // insert the limit into map, and order into map
         limits->insert(std::make_pair(l.limitPrice, l));
         orders->insert(std::make_pair(o.limit, o));
-        if (o.buyOrSell)
+        if (o.buyOrSell == Order::BUY)
             buySide->insert(std::make_pair(l.limitPrice, l));
         else
             sellSide->insert(std::make_pair(l.limitPrice, l));

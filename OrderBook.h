@@ -22,13 +22,17 @@ class OrderBook {
         // execute or market order?
 
         // Getters
-        int getVolumeAtLimit(int limitPrice) const;
-        int getBestBid() const;
-        int getBestOffer() const;
+        int  getVolumeAtLimit(int limitPrice) const;
+        int  getBestBid() const;
+        int  getBestOffer() const;
 
         void print() const;
-        void printList(const std::list<Order>* listPtr) const;
+        void printLimit() const;
+
     private:
+        void printOrderHelper(const std::list<Order>* listPtr, int columnWidth) const;
+        void printLimitHelper(const Limit& limit, int columnWidth) const;
+
         std::map<int, Limit, std::greater<int>> *sellSide;
         std::map<int, Limit, std::greater<int>> *buySide;
         std::unordered_map<int, Order> *orders;

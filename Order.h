@@ -17,28 +17,22 @@ struct Order {
     int   limit;
     int   entryTime;
     int   eventTime;
-    // Order *nextOrder;
-    // Order *prevOrder;
-    Limit *parentLimit;
+    // Limit *parentLimit;
 
     Order(int        _idNumber,
           bool       _buyOrSell,
           int        _shares,
           int        _limit,
           int        _entryTime,
-          int        _eventTime,
-        //   Order      *_nextOrder,
-        //   Order      *_prevOrder,
-          Limit      *_parentLimit) : 
+          int        _eventTime) :
+        //   Limit      *_parentLimit) : 
           idNumber   (_idNumber),
           buyOrSell  (_buyOrSell),
           shares     (_shares),
           limit      (_limit),
           entryTime  (_entryTime),
-          eventTime  (_eventTime),
-        //   nextOrder  (_nextOrder),
-        //   prevOrder  (_prevOrder),
-          parentLimit(_parentLimit) {}
+          eventTime  (_eventTime) {}
+        //   parentLimit(_parentLimit) {}
 };
 
 #endif /* __ORDER__ */

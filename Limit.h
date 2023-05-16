@@ -18,11 +18,11 @@ struct Limit {
     int              totalVolume;
     std::list<Order> *orders;
 
-    Limit(int _limitPrice, int _size, int _totalVolume) :
+    Limit(int _limitPrice, int _size) :
       limitPrice (_limitPrice),
       size       (_size),
-      totalVolume(_totalVolume),
-      orders(new std::list<Order>()) {}
+      totalVolume(0),
+      orders(new std::list<Order>) {}
 
     // ~Limit()
     // {

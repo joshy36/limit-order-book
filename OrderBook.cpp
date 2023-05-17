@@ -13,10 +13,10 @@
  */
 OrderBook::OrderBook()
 {
-    sellSide   = new std::map<double, Limit, std::greater<double>>;
-    buySide    = new std::map<double, Limit, std::greater<double>>;
-    orders     = new std::unordered_map<double, Order>;
-    limits     = new std::unordered_map<double, Limit>;
+    sellSide   = new std::map<double, Limit*, std::greater<double>>;
+    buySide    = new std::map<double, Limit*, std::greater<double>>;
+    orders     = new std::unordered_map<double, Order*>;
+    limits     = new std::unordered_map<double, Limit*>;
     lowestSell = nullptr;
     highestBuy = nullptr;
 }
@@ -39,34 +39,29 @@ OrderBook::~OrderBook()
  * Parameters: Order to add to book.
  * Returns: Nothing.
  */
-void OrderBook::addOrder(const Order &o)
+void OrderBook::addOrder(Order *o)
 {
     try {
         // check to see if a limit exists at order limit
-        limits->at(o.limit);
-        std::cout << "Limit in book, add to linked list" << std::endl;
+        limits->at(o->limit);
         // insert order into map
-        orders->insert(std::make_pair(o.limit, o));
+        orders->emplace(o->limit, o);
         // update size
-        std::cout << limits->at(o.limit).getVol() << std::endl;
-        std::cout << o.shares << std::endl;
-        // limits->at(o.limit).getVol() += o.shares;
-        std::cout << limits->at(o.limit).getVol() << std::endl;
+        limits->at(o->limit)->setVol(o->shares);
     } catch (const std::out_of_range& e) {
-        std::cout << "Add limit to book" << std::endl;
         // create the new limit
-        Limit l = Limit(o.limit);
+        Limit *l = new Limit(o->limit, o->shares);
         // insert the limit into map, and order into map
-        limits->insert(std::make_pair(l.getPrice(), l));
-        orders->insert(std::make_pair(o.limit, o));
+        limits->emplace(l->getPrice(), l);
+        orders->emplace(o->limit, o);
         // insert limit into correct tree
-        if (o.buyOrSell == Order::BUY)
-            buySide->insert(std::make_pair(l.getPrice(), l));
+        if (o->buyOrSell == Order::BUY)
+            buySide->emplace(l->getPrice(), l);
         else
-            sellSide->insert(std::make_pair(l.getPrice(), l));
+            sellSide->emplace(l->getPrice(), l);
     }
     // insert order into linked list at corresponding limit
-    limits->at(o.limit).addOrder(o);
+    limits->at(o->limit)->addOrder(*o);
 }
 
 /*
@@ -86,11 +81,11 @@ void OrderBook::print() const
     std::cout << std::setfill('-') << std::setw(columnWidth * 4 + 2) << "" 
               << std::setfill(' ') << std::endl;
     for (const auto& pair : *sellSide)
-        printOrderHelper(pair.second.getOrders(), columnWidth);
+        printOrderHelper(pair.second->getOrders(), columnWidth);
     std::cout << std::setfill('-') << std::setw(columnWidth * 4 + 2) << "" 
               << std::setfill(' ') << " Print Spread here" << std::endl;
     for (const auto& pair : *buySide)
-        printOrderHelper(pair.second.getOrders(), columnWidth);
+        printOrderHelper(pair.second->getOrders(), columnWidth);
     std::cout << std::setfill('-') << std::setw(columnWidth * 4 + 2) << "" 
               << std::setfill(' ') << std::endl << std::endl;
 }
@@ -118,16 +113,6 @@ void OrderBook::printLimit() const
               << "" << std::setfill(' ') << std::endl << std::endl;
 }
 
-void OrderBook::printLimitHelper(const Limit& limit, int columnWidth) const
-{
-    std::string red = "\033[31m";
-    std::string green = "\033[32m";
-    std::string reset = "\033[0m";
-    std::cout << std::setw(columnWidth) << limit.getPrice() <<  "| "
-              << std::setw(columnWidth) << limit.getVol() << "| "
-              << std::endl;
-}
-
 void OrderBook::printOrderHelper(const std::list<Order>* listPtr, int columnWidth) const
 {
     for (const Order& i : *listPtr) {
@@ -137,4 +122,14 @@ void OrderBook::printOrderHelper(const std::list<Order>* listPtr, int columnWidt
                   << std::setw(columnWidth) << i.idNumber 
                   << std::endl;
     }
+}
+
+void OrderBook::printLimitHelper(const Limit* limit, int columnWidth) const
+{
+    std::string red = "\033[31m";
+    std::string green = "\033[32m";
+    std::string reset = "\033[0m";
+    std::cout << std::setw(columnWidth) << limit->getPrice() <<  "| "
+              << std::setw(columnWidth) << limit->getVol() << "| "
+              << std::endl;
 }

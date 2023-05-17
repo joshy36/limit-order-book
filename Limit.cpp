@@ -9,10 +9,10 @@
 /*
  * Default constructor.
  */
-Limit::Limit(double _limitPrice)
+Limit::Limit(double price, double volume)
 {
-    limitPrice  = _limitPrice;
-    totalVolume = 0;
+    limitPrice  = price;
+    totalVolume = volume;
     orders      = new std::list<Order>;
 }
 
@@ -58,6 +58,22 @@ std::list<Order>* Limit::getOrders() const
 void Limit::addOrder(const Order &o)
 {
     orders->push_back(o);
+}
+
+/*
+ * setVol
+ * Purpose: Set the volume when an order is added or removed.
+ * Parameters: A double to change the vol by.
+ * Returns: Nothing.
+ */
+void Limit::setVol(double volDiff)
+{
+    totalVolume += volDiff;
+}
+#include <iostream>
+void Limit::printVol() const
+{
+    std::cout << totalVolume << std::endl;
 }
 
 /*

@@ -9,8 +9,8 @@ int idNumber  = 0;
 int entryTime = 0;
 int eventTime = 0;
 
-Order orderGenerator(Order::OrderType type, int shares, double limit) {
-    Order o = Order(idNumber, type, shares, limit, entryTime, eventTime);
+Order* orderGenerator(Order::OrderType type, int shares, double limit) {
+    Order *o = new Order(idNumber, type, shares, limit, entryTime, eventTime);
     idNumber  += 1;
     entryTime += 1;
     eventTime += 1;

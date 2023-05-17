@@ -48,24 +48,25 @@ void OrderBook::addOrder(const Order &o)
         // insert order into map
         orders->insert(std::make_pair(o.limit, o));
         // update size
-        std::cout << limits->at(o.limit).totalVolume << std::endl;
+        std::cout << limits->at(o.limit).getVol() << std::endl;
         std::cout << o.shares << std::endl;
-        limits->at(o.limit).totalVolume += o.shares;
-        std::cout << limits->at(o.limit).totalVolume << std::endl;
+        // limits->at(o.limit).getVol() += o.shares;
+        std::cout << limits->at(o.limit).getVol() << std::endl;
     } catch (const std::out_of_range& e) {
         std::cout << "Add limit to book" << std::endl;
         // create the new limit
         Limit l = Limit(o.limit);
         // insert the limit into map, and order into map
-        limits->insert(std::make_pair(l.limitPrice, l));
+        limits->insert(std::make_pair(l.getPrice(), l));
         orders->insert(std::make_pair(o.limit, o));
+        // insert limit into correct tree
         if (o.buyOrSell == Order::BUY)
-            buySide->insert(std::make_pair(l.limitPrice, l));
+            buySide->insert(std::make_pair(l.getPrice(), l));
         else
-            sellSide->insert(std::make_pair(l.limitPrice, l));
+            sellSide->insert(std::make_pair(l.getPrice(), l));
     }
     // insert order into linked list at corresponding limit
-    limits->at(o.limit).orders->push_back(o);
+    limits->at(o.limit).addOrder(o);
 }
 
 /*
@@ -77,19 +78,19 @@ void OrderBook::addOrder(const Order &o)
 void OrderBook::print() const
 {
     int columnWidth = 10;
-    std::cout << std::setw(columnWidth) << std::left << "Price" << "|" 
-              << std::setw(columnWidth) << "Id" << "|" 
-              << std::setw(columnWidth) << "Shares" << "|" 
-              << std::setw(columnWidth) << "Timestamp" 
+    std::cout << std::setw(columnWidth) << std::left << "Price" << "| " 
+              << std::setw(columnWidth) << "Shares" << "| " 
+              << std::setw(columnWidth) << "Timestamp" << "| " 
+              << std::setw(columnWidth) << "Id" 
               << std::endl;
     std::cout << std::setfill('-') << std::setw(columnWidth * 4 + 2) << "" 
               << std::setfill(' ') << std::endl;
     for (const auto& pair : *sellSide)
-        printOrderHelper(pair.second.orders, columnWidth);
+        printOrderHelper(pair.second.getOrders(), columnWidth);
     std::cout << std::setfill('-') << std::setw(columnWidth * 4 + 2) << "" 
-              << std::setfill(' ') << std::endl;
+              << std::setfill(' ') << " Print Spread here" << std::endl;
     for (const auto& pair : *buySide)
-        printOrderHelper(pair.second.orders, columnWidth);
+        printOrderHelper(pair.second.getOrders(), columnWidth);
     std::cout << std::setfill('-') << std::setw(columnWidth * 4 + 2) << "" 
               << std::setfill(' ') << std::endl << std::endl;
 }
@@ -103,7 +104,7 @@ void OrderBook::print() const
 void OrderBook::printLimit() const
 {
     int columnWidth = 10;
-    std::cout << std::setw(columnWidth) << std::left << "Price" << "|" 
+    std::cout << std::setw(columnWidth) << std::left << "Price" << "| " 
               << std::setw(columnWidth) << "Total Vol" << std::endl;
     std::cout << std::setfill('-') << std::setw(columnWidth * 2 + 2) << "" 
               << std::setfill(' ') << std::endl;
@@ -122,18 +123,18 @@ void OrderBook::printLimitHelper(const Limit& limit, int columnWidth) const
     std::string red = "\033[31m";
     std::string green = "\033[32m";
     std::string reset = "\033[0m";
-    std::cout << std::setw(columnWidth) << limit.limitPrice <<  "|"
-              << std::setw(columnWidth) << limit.totalVolume << "|"
+    std::cout << std::setw(columnWidth) << limit.getPrice() <<  "| "
+              << std::setw(columnWidth) << limit.getVol() << "| "
               << std::endl;
 }
 
 void OrderBook::printOrderHelper(const std::list<Order>* listPtr, int columnWidth) const
 {
     for (const Order& i : *listPtr) {
-        std::cout << std::setw(columnWidth) << i.limit <<  "|"
-                  << std::setw(columnWidth) << i.idNumber << "|"
-                  << std::setw(columnWidth) << i.shares << "|"
-                  << std::setw(columnWidth) << i.entryTime
+        std::cout << std::setw(columnWidth) << i.limit <<  "| "
+                  << std::setw(columnWidth) << i.shares << "| "
+                  << std::setw(columnWidth) << i.entryTime << "| "
+                  << std::setw(columnWidth) << i.idNumber 
                   << std::endl;
     }
 }

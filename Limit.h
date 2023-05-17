@@ -12,21 +12,22 @@
 
 struct Order;
 
-struct Limit {
-    double           limitPrice;
-    double           totalVolume;
-    std::list<Order> *orders;
+class Limit {
+    public:
+        Limit(double _limitPrice);
+        // ~Limit();
 
-    Limit(double _limitPrice) :
-        limitPrice (_limitPrice),
-        totalVolume(0),
-        orders(new std::list<Order>) {}
+        double            getPrice()  const;
+        double            getVol()    const;
+        std::list<Order>* getOrders() const;
 
-    // ~Limit()
-    // {
-    //   delete orders;
-    // }
-
+        void              addOrder(const Order &o);
+        void              setVol()    const;
+    
+    private:
+        double           limitPrice;
+        double           totalVolume;
+        std::list<Order> *orders;
 };
 
 #endif /* __LIMIT__ */

@@ -1,7 +1,7 @@
 /*
  * Limit.cpp
  * 
- * Purpose: 
+ * Purpose: Implementation of the Limit class.
  */
 
 #include "Limit.h"
@@ -9,41 +9,37 @@
 /*
  * Default constructor.
  */
-Limit::Limit(double price, double volume)
+Limit::Limit(double _limitPrice, double _totalVolume)
 {
-    limitPrice  = price;
-    totalVolume = volume;
+    limitPrice  = _limitPrice;
+    totalVolume = _totalVolume;
     orders      = new std::list<Order>;
 }
 
 /*
- * getPrice
- * Purpose: Get the limit price.
+ * Destructor to free allocated memory.
+ */
+Limit::~Limit()
+{
+    delete orders;
+}
+
+/*
+ * getter functions
+ * Purpose: Provides access to get private data members.
  * Parameters: None.
- * Returns: The limit price.
+ * Returns: Desired data member.
  */
 double Limit::getPrice() const
 {
     return limitPrice;
 }
 
-/*
- * getVol
- * Purpose: Get the limit volume.
- * Parameters: None.
- * Returns: The limit volume.
- */
 double Limit::getVol() const
 {
     return totalVolume;
 }
 
-/*
- * getOrders
- * Purpose: Get the orders at a limit.
- * Parameters: None.
- * Returns: A list of the orders at a limit.
- */
 std::list<Order>* Limit::getOrders() const
 {
     return orders;
@@ -70,16 +66,3 @@ void Limit::setVol(double volDiff)
 {
     totalVolume += volDiff;
 }
-#include <iostream>
-void Limit::printVol() const
-{
-    std::cout << totalVolume << std::endl;
-}
-
-/*
- * Destructor to free allocated memory.
- */
-// Limit::~Limit()
-// {
-//     delete orders;
-// }

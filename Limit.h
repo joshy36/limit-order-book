@@ -1,7 +1,7 @@
 /*
  * Limit.h
  * 
- * Purpose: 
+ * Purpose: Interface for the Limit class.
  */
 
 #ifndef __LIMIT__
@@ -10,12 +10,12 @@
 #include <list>
 #include "Order.h"
 
-struct Order;
+class Order;
 
 class Limit {
     public:
-        Limit(double price, double volume);
-        // ~Limit();
+        Limit(double _limitPrice, double _totalVolume);
+        ~Limit();
 
         double            getPrice()  const;
         double            getVol()    const;
@@ -23,7 +23,6 @@ class Limit {
 
         void              addOrder(const Order &o);
         void              setVol(double volDiff);
-        void printVol() const;
     
     private:
         double           limitPrice;

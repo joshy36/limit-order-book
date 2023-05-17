@@ -26,11 +26,11 @@ void resetOrders() {
 void testAdd() {
     OrderBook book;
     book.addOrder(orderGenerator(Order::SELL, 2, 7.9));
-    book.addOrder(orderGenerator(Order::BUY, 5, 4.3));
-    book.addOrder(orderGenerator(Order::BUY, 6, 6.11));
-    book.addOrder(orderGenerator(Order::BUY, 7, 6));
-    book.addOrder(orderGenerator(Order::SELL, 2, 5.2));
-    book.addOrder(orderGenerator(Order::SELL, 2, 5.2));
+    book.addOrder(orderGenerator(Order::BUY,  5, 4.3));
+    book.addOrder(orderGenerator(Order::BUY,  6, 6.11));
+    book.addOrder(orderGenerator(Order::BUY,  7, 6));
+    book.addOrder(orderGenerator(Order::SELL, 2, 6.2));
+    book.addOrder(orderGenerator(Order::SELL, 2, 6.2));
     book.print();
     book.printLimit();
     resetOrders();

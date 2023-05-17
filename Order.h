@@ -1,7 +1,7 @@
 /*
  * Order.h
  * 
- * Purpose: 
+ * Purpose: Interface for the Order class.
  */
 
 #ifndef __ORDER__
@@ -9,30 +9,29 @@
 
 #include "Limit.h"
 
-struct Order {
-    int       idNumber;
-    enum      OrderType { BUY, SELL };
-    OrderType buyOrSell;
-    double    shares;
-    double    limit;
-    int       entryTime;
-    int       eventTime;
-    // Limit *parentLimit;
+class Order {
+    public:
+        enum  OrderType { BUY, SELL };
 
-    Order(int       _idNumber,
-          OrderType _type,
-          double    _shares,
-          double    _limit,
-          int       _entryTime,
-          int       _eventTime) :
-        //   Limit      *_parentLimit) : 
-          idNumber  (_idNumber),
-          buyOrSell (_type),
-          shares    (_shares),
-          limit     (_limit),
-          entryTime (_entryTime),
-          eventTime (_eventTime) {}
-        //   parentLimit(_parentLimit) {}
+        Order(int _idNumber, OrderType buyOrSell, double _shares, 
+              double _limit, int _entryTime, int _eventTime);
+        ~Order();
+
+        int       getIdNumber()  const;
+        OrderType getBuyOrSell() const;
+        double    getShares()    const;
+        double    getLimit()     const;
+        int       getEntryTime() const;
+        int       getEventTime() const;
+        
+    private:
+        int       idNumber;
+        OrderType buyOrSell;
+        double    shares;
+        double    limit;
+        int       entryTime;
+        int       eventTime;
+    //  Limit *parentLimit;
 };
 
 #endif /* __ORDER__ */

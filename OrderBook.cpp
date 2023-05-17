@@ -1,7 +1,7 @@
 /*
  * OrderBook.cpp
  * 
- * Purpose: 
+ * Purpose: Implementation of the OrderBook class.
  */
 #include <iostream>
 #include <iomanip>
@@ -43,25 +43,25 @@ void OrderBook::addOrder(Order *o)
 {
     try {
         // check to see if a limit exists at order limit
-        limits->at(o->limit);
+        limits->at(o->getLimit());
         // insert order into map
-        orders->emplace(o->limit, o);
+        orders->emplace(o->getLimit(), o);
         // update size
-        limits->at(o->limit)->setVol(o->shares);
+        limits->at(o->getLimit())->setVol(o->getShares());
     } catch (const std::out_of_range& e) {
         // create the new limit
-        Limit *l = new Limit(o->limit, o->shares);
+        Limit *l = new Limit(o->getLimit(), o->getShares());
         // insert the limit into map, and order into map
         limits->emplace(l->getPrice(), l);
-        orders->emplace(o->limit, o);
+        orders->emplace(o->getLimit(), o);
         // insert limit into correct tree
-        if (o->buyOrSell == Order::BUY)
+        if (o->getBuyOrSell() == Order::BUY)
             buySide->emplace(l->getPrice(), l);
         else
             sellSide->emplace(l->getPrice(), l);
     }
     // insert order into linked list at corresponding limit
-    limits->at(o->limit)->addOrder(*o);
+    limits->at(o->getLimit())->addOrder(*o);
 }
 
 /*
@@ -116,10 +116,10 @@ void OrderBook::printLimit() const
 void OrderBook::printOrderHelper(const std::list<Order>* listPtr, int columnWidth) const
 {
     for (const Order& i : *listPtr) {
-        std::cout << std::setw(columnWidth) << i.limit <<  "| "
-                  << std::setw(columnWidth) << i.shares << "| "
-                  << std::setw(columnWidth) << i.entryTime << "| "
-                  << std::setw(columnWidth) << i.idNumber 
+        std::cout << std::setw(columnWidth) << i.getLimit()     << "| "
+                  << std::setw(columnWidth) << i.getShares()    << "| "
+                  << std::setw(columnWidth) << i.getEntryTime() << "| "
+                  << std::setw(columnWidth) << i.getIdNumber() 
                   << std::endl;
     }
 }
@@ -129,7 +129,7 @@ void OrderBook::printLimitHelper(const Limit* limit, int columnWidth) const
     std::string red = "\033[31m";
     std::string green = "\033[32m";
     std::string reset = "\033[0m";
-    std::cout << std::setw(columnWidth) << limit->getPrice() <<  "| "
-              << std::setw(columnWidth) << limit->getVol() << "| "
+    std::cout << std::setw(columnWidth) << limit->getPrice() << "| "
+              << std::setw(columnWidth) << limit->getVol()   << "| "
               << std::endl;
 }

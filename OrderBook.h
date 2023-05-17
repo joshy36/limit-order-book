@@ -1,7 +1,7 @@
 /*
  * OrderBook.h
  * 
- * Purpose: 
+ * Purpose: Interface for the OrderBook class.
  */
 
 #ifndef __ORDERBOOK__

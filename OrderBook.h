@@ -20,6 +20,7 @@ class OrderBook {
         void addOrder(Order *o);
         void cancelOrder(int idNumber);
         // execute or market order?
+        void clearBook();
 
         double getVolumeAtLimit(double limitPrice) const;
         Order  getBestBid()                        const;

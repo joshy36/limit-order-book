@@ -65,6 +65,23 @@ void OrderBook::addOrder(Order *o)
 }
 
 /*
+ * clears
+ * Purpose: Clears all the orders out of the book, effectively 
+ * reseting to an empty book.
+ * Parameters: None.
+ * Returns: Nothing.
+ */
+void OrderBook::clearBook()
+{
+    sellSide->clear();
+    buySide->clear();
+    orders->clear();
+    limits->clear();
+    lowestSell = nullptr;
+    highestBuy = nullptr;
+}
+
+/*
  * print
  * Purpose: Print the order book orders, used for testing and debugging.
  * Parameters: None.

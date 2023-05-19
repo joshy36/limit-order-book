@@ -17,6 +17,8 @@ class Order {
               double _limit, int _entryTime, int _eventTime);
         ~Order();
 
+        bool operator==(const Order& other) const;
+
         int       getIdNumber()  const;
         OrderType getBuyOrSell() const;
         double    getShares()    const;

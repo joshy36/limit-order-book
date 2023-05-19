@@ -29,6 +29,16 @@ Order::~Order()
 }
 
 /*
+ * equal to operator overload
+ * Purpose: Determine whether two orders are equal.
+ * Parameters: A const Order reference.
+ * Returns: A boolean value that is true iff the Order instances are the same.
+ */
+bool Order::operator==(const Order& other) const {
+    return idNumber == other.idNumber;
+}
+
+/*
  * getter functions
  * Purpose: Provides access to get private data members.
  * Parameters: None.

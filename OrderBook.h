@@ -26,8 +26,8 @@ class OrderBook {
         Order  getBestBid()                        const;
         Order  getBestOffer()                      const;
 
-        void print()                             const;
-        void printLimit()                        const;
+        void print()                               const;
+        void printLimit()                          const;
 
     private:
         void printOrderHelper(const std::list<Order>* listPtr, int columnWidth) const;
@@ -35,7 +35,9 @@ class OrderBook {
 
         std::map<double, Limit*, std::greater<double>> *sellSide;
         std::map<double, Limit*, std::greater<double>> *buySide;
-        std::unordered_map<double, Order*> *orders;
+        // map from idNumber to order
+        std::unordered_map<int, Order*> *orders;
+        // map from limitPrice to limit
         std::unordered_map<double, Limit*> *limits;
 
         Limit *lowestSell;

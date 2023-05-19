@@ -15,7 +15,7 @@ OrderBook::OrderBook()
 {
     sellSide   = new std::map<double, Limit*, std::greater<double>>;
     buySide    = new std::map<double, Limit*, std::greater<double>>;
-    orders     = new std::unordered_map<double, Order*>;
+    orders     = new std::unordered_map<int, Order*>;
     limits     = new std::unordered_map<double, Limit*>;
     lowestSell = nullptr;
     highestBuy = nullptr;
@@ -45,15 +45,13 @@ void OrderBook::addOrder(Order *o)
         // check to see if a limit exists at order limit
         limits->at(o->getLimit());
         // insert order into map
-        orders->emplace(o->getLimit(), o);
-        // update size
-        limits->at(o->getLimit())->setVol(o->getShares());
+        orders->emplace(o->getIdNumber(), o);
     } catch (const std::out_of_range& e) {
         // create the new limit
-        Limit *l = new Limit(o->getLimit(), o->getShares());
+        Limit *l = new Limit(o->getLimit());
         // insert the limit into map, and order into map
         limits->emplace(l->getPrice(), l);
-        orders->emplace(o->getLimit(), o);
+        orders->emplace(o->getIdNumber(), o);
         // insert limit into correct tree
         if (o->getBuyOrSell() == Order::BUY)
             buySide->emplace(l->getPrice(), l);
@@ -65,7 +63,24 @@ void OrderBook::addOrder(Order *o)
 }
 
 /*
- * clears
+ * cancelOrder
+ * Purpose: Remove an order from the book.
+ * Parameters: idNumber of order to remove.
+ * Returns: Nothing.
+ */
+void OrderBook::cancelOrder(int idNumber) 
+{
+    try {
+        Order *o = orders->at(idNumber);
+        limits->at(o->getLimit())->removeOrder(*o);
+        delete o;
+    } catch (const std::out_of_range& e) {
+        std::cerr << "Not in book" << std::endl;
+    }
+}
+
+/*
+ * clearBook
  * Purpose: Clears all the orders out of the book, effectively 
  * reseting to an empty book.
  * Parameters: None.

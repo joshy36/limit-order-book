@@ -9,10 +9,10 @@
 /*
  * Default constructor.
  */
-Limit::Limit(double _limitPrice, double _totalVolume)
+Limit::Limit(double _limitPrice)
 {
     limitPrice  = _limitPrice;
-    totalVolume = _totalVolume;
+    totalVolume = 0;
     orders      = new std::list<Order>;
 }
 
@@ -54,6 +54,19 @@ std::list<Order>* Limit::getOrders() const
 void Limit::addOrder(const Order &o)
 {
     orders->push_back(o);
+    totalVolume += o.getShares();
+}
+
+/*
+ * removeOrder
+ * Purpose: Remove an order from a limit.
+ * Parameters: A const reference to the order to remove.
+ * Returns: Nothing.
+ */
+void Limit::removeOrder(const Order &o)
+{
+    orders->remove(o);
+    totalVolume -= o.getShares();
 }
 
 /*

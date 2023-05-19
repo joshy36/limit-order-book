@@ -83,10 +83,25 @@ void stressTestAdd(int num, bool oneLimit)
     resetOrders();
 }
 
+void testCancel()
+{
+    OrderBook book;
+    book.addOrder(orderGenerator(Order::SELL, 2, 7.9));
+    book.addOrder(orderGenerator(Order::SELL, 7, 7.9));
+    book.print();
+    book.printLimit();
+    book.cancelOrder(1);
+    book.cancelOrder(2);
+    book.print();
+    book.printLimit();
+    resetOrders();
+}
+
 int main()
 {
     // testAddClear();
-    stressTestAdd(std::pow(10,8), true);
-    stressTestAdd(std::pow(10,8), false);
+    // stressTestAdd(std::pow(10,7), true);
+    // stressTestAdd(std::pow(10,7), false);
+    testCancel();
     return 0;
 }

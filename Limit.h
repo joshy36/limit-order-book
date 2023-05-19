@@ -14,7 +14,7 @@ class Order;
 
 class Limit {
     public:
-        Limit(double _limitPrice, double _totalVolume);
+        Limit(double _limitPrice);
         ~Limit();
 
         double            getPrice()  const;
@@ -22,6 +22,7 @@ class Limit {
         std::list<Order>* getOrders() const;
 
         void              addOrder(const Order &o);
+        void              removeOrder(const Order &o);
         void              setVol(double volDiff);
     
     private:

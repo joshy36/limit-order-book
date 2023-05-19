@@ -23,8 +23,8 @@ class OrderBook {
         void clearBook();
 
         double getVolumeAtLimit(double limitPrice) const;
-        Order  getBestBid()                        const;
-        Order  getBestOffer()                      const;
+        Limit* getBestBid()                        const;
+        Limit* getBestOffer()                      const;
 
         void print()                               const;
         void printLimit()                          const;
@@ -40,8 +40,8 @@ class OrderBook {
         // map from limitPrice to limit
         std::unordered_map<double, Limit*> *limits;
 
-        Limit *lowestSell;
-        Limit *highestBuy;
+        Limit *bestBid;
+        Limit *bestOffer;
 };
 
 #endif /* __ORDERBOOK__ */

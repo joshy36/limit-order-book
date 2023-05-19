@@ -89,17 +89,36 @@ void stressTestAdd(int num, bool oneLimit)
 void testCancel()
 {
     OrderBook book;
+    book.addOrder(orderGenerator(Order::SELL, 3, 2.1));
     book.addOrder(orderGenerator(Order::SELL, 2, 7.9));
     book.addOrder(orderGenerator(Order::SELL, 7, 7.9));
     book.print();
     book.printLimit();
     std::cout << "Volume at 7.9:  " << book.getVolumeAtLimit(7.9) << std::endl;
-    book.cancelOrder(1);
+    book.cancelOrder(0);
     book.cancelOrder(2);
+    book.cancelOrder(3);
     book.print();
     book.printLimit();
     std::cout << "Volume at 7.9:  " << book.getVolumeAtLimit(7.9) << std::endl;
     resetOrders();
+}
+
+void testGetters()
+{
+    OrderBook book;
+    book.getBestBid();
+    book.getBestOffer();
+    book.addOrder(orderGenerator(Order::BUY, 3, 2.1));
+    book.addOrder(orderGenerator(Order::SELL, 5, 2.7));
+    std::cout << "Best Bid:   " << book.getBestBid()->getPrice() << std::endl;
+    std::cout << "Best Offer: " << book.getBestOffer()->getPrice() << std::endl;
+    book.addOrder(orderGenerator(Order::BUY, 3, 2.2));
+    book.addOrder(orderGenerator(Order::SELL, 5, 2.6));
+    book.addOrder(orderGenerator(Order::BUY, 3, 1.9));
+    book.addOrder(orderGenerator(Order::SELL, 5, 2.9));
+    std::cout << "Best Bid:   " << book.getBestBid()->getPrice() << std::endl;
+    std::cout << "Best Offer: " << book.getBestOffer()->getPrice() << std::endl;
 }
 
 int main()
@@ -107,6 +126,7 @@ int main()
     // testAddClear();
     // stressTestAdd(std::pow(10,7), true);
     // stressTestAdd(std::pow(10,7), false);
-    testCancel();
+    // testCancel();
+    testGetters();
     return 0;
 }

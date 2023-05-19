@@ -17,8 +17,8 @@ OrderBook::OrderBook()
     buySide    = new std::map<double, Limit*, std::greater<double>>;
     orders     = new std::unordered_map<int, Order*>;
     limits     = new std::unordered_map<double, Limit*>;
-    lowestSell = nullptr;
-    highestBuy = nullptr;
+    bestBid    = nullptr;
+    bestOffer  = nullptr;
 }
 
 /*
@@ -48,10 +48,20 @@ void OrderBook::addOrder(Order *o)
         Limit *l = new Limit(o->getLimit());
         limits->emplace(l->getPrice(), l);
         orders->emplace(o->getIdNumber(), o);
-        if (o->getBuyOrSell() == Order::BUY)
+        if (o->getBuyOrSell() == Order::BUY) {
             buySide->emplace(l->getPrice(), l);
-        else
+            if (bestBid == nullptr)
+                bestBid = l;
+            else if (o->getLimit() > bestBid->getPrice())
+                bestBid = l;
+        }
+        else {
             sellSide->emplace(l->getPrice(), l);
+            if (bestOffer == nullptr)
+                bestOffer = l;
+            else if (o->getLimit() < bestOffer->getPrice())
+                bestOffer = l;
+        }
     }
     limits->at(o->getLimit())->addOrder(*o);
 }
@@ -67,6 +77,19 @@ void OrderBook::cancelOrder(int idNumber)
     try {
         Order *o = orders->at(idNumber);
         limits->at(o->getLimit())->removeOrder(*o);
+        Limit *l = limits->at(o->getLimit());
+        if (l->getOrders()->size() == 0) {
+            // remove limit from correct tree
+            if (o->getBuyOrSell() == Order::BUY)
+                buySide->erase(l->getPrice());
+            else
+                sellSide->erase(l->getPrice());
+            // remove limit from map
+            limits->erase(l->getPrice());
+            delete l;
+            // heap stuff
+        }
+        orders->erase(idNumber);
         delete o;
     } catch (const std::out_of_range& e) {
         std::cerr << "Not in book" << std::endl;
@@ -86,8 +109,8 @@ void OrderBook::clearBook()
     buySide->clear();
     orders->clear();
     limits->clear();
-    lowestSell = nullptr;
-    highestBuy = nullptr;
+    bestBid   = nullptr;
+    bestOffer = nullptr;
 }
 
 /*
@@ -105,6 +128,19 @@ double OrderBook::getVolumeAtLimit(double limitPrice) const
     }
 }
 
+Limit* OrderBook::getBestBid() const
+{
+    if (bestBid == nullptr)
+        std::cerr << "No bids in book" << std::endl;
+    return bestBid;
+}
+        
+Limit* OrderBook::getBestOffer() const
+{
+    if (bestOffer == nullptr)
+        std::cerr << "No offers in book" << std::endl;
+    return bestOffer;
+}
 
 /*
  * print

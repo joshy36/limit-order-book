@@ -23,7 +23,6 @@ class Limit {
 
         void              addOrder(const Order &o);
         void              removeOrder(const Order &o);
-        void              setVol(double volDiff);
     
     private:
         double           limitPrice;

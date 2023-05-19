@@ -42,23 +42,17 @@ OrderBook::~OrderBook()
 void OrderBook::addOrder(Order *o)
 {
     try {
-        // check to see if a limit exists at order limit
         limits->at(o->getLimit());
-        // insert order into map
         orders->emplace(o->getIdNumber(), o);
     } catch (const std::out_of_range& e) {
-        // create the new limit
         Limit *l = new Limit(o->getLimit());
-        // insert the limit into map, and order into map
         limits->emplace(l->getPrice(), l);
         orders->emplace(o->getIdNumber(), o);
-        // insert limit into correct tree
         if (o->getBuyOrSell() == Order::BUY)
             buySide->emplace(l->getPrice(), l);
         else
             sellSide->emplace(l->getPrice(), l);
     }
-    // insert order into linked list at corresponding limit
     limits->at(o->getLimit())->addOrder(*o);
 }
 
@@ -95,6 +89,22 @@ void OrderBook::clearBook()
     lowestSell = nullptr;
     highestBuy = nullptr;
 }
+
+/*
+ * getVolumeAtLimit
+ * Purpose: Get the volume of shares at a limit price.
+ * Parameters: Limit price to check.
+ * Returns: A double with the volume at that limit.
+ */
+double OrderBook::getVolumeAtLimit(double limitPrice) const
+{
+    try {
+        return limits->at(limitPrice)->getVol();
+    } catch (const std::out_of_range& e) {
+        return 0;
+    }
+}
+
 
 /*
  * print
@@ -145,9 +155,9 @@ void OrderBook::printLimit() const
               << "" << std::setfill(' ') << std::endl << std::endl;
 }
 
-void OrderBook::printOrderHelper(const std::list<Order>* listPtr, int columnWidth) const
+void OrderBook::printOrderHelper(const std::list<Order>* list, int columnWidth) const
 {
-    for (const Order& i : *listPtr) {
+    for (const Order& i : *list) {
         std::cout << std::setw(columnWidth) << i.getLimit()     << "| "
                   << std::setw(columnWidth) << i.getShares()    << "| "
                   << std::setw(columnWidth) << i.getEntryTime() << "| "

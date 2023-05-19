@@ -30,8 +30,8 @@ class OrderBook {
         void printLimit()                          const;
 
     private:
-        void printOrderHelper(const std::list<Order>* listPtr, int columnWidth) const;
-        void printLimitHelper(const Limit* limit, int columnWidth)              const;
+        void printOrderHelper(const std::list<Order>* list, int columnWidth) const;
+        void printLimitHelper(const Limit* limit, int columnWidth)           const;
 
         std::map<double, Limit*, std::greater<double>> *sellSide;
         std::map<double, Limit*, std::greater<double>> *buySide;

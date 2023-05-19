@@ -68,14 +68,3 @@ void Limit::removeOrder(const Order &o)
     orders->remove(o);
     totalVolume -= o.getShares();
 }
-
-/*
- * setVol
- * Purpose: Set the volume when an order is added or removed.
- * Parameters: A double to change the vol by.
- * Returns: Nothing.
- */
-void Limit::setVol(double volDiff)
-{
-    totalVolume += volDiff;
-}

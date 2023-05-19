@@ -38,6 +38,9 @@ void testAddClear()
     book.addOrder(orderGenerator(Order::SELL, 2, 6.2));
     book.print();
     book.printLimit();
+    std::cout << "Volume at 6.2:  " << book.getVolumeAtLimit(6.2) << std::endl;
+    std::cout << "Volume at 6.11: " << book.getVolumeAtLimit(6.11) << std::endl;
+    std::cout << "Volume at 88:   " << book.getVolumeAtLimit(88) << std::endl;
     // testing clear
     book.clearBook();
     book.print();
@@ -90,10 +93,12 @@ void testCancel()
     book.addOrder(orderGenerator(Order::SELL, 7, 7.9));
     book.print();
     book.printLimit();
+    std::cout << "Volume at 7.9:  " << book.getVolumeAtLimit(7.9) << std::endl;
     book.cancelOrder(1);
     book.cancelOrder(2);
     book.print();
     book.printLimit();
+    std::cout << "Volume at 7.9:  " << book.getVolumeAtLimit(7.9) << std::endl;
     resetOrders();
 }
 

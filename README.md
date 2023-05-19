@@ -42,4 +42,4 @@ Note: the worst case situations should rarely happen in a dense order book.
 of Orders. If you have a more sparse book, a different implementation might have better
 performance.
 ## Instructions
-To compile type `make`. To run tests type `./run`.
+To compile type `make`. To run tests type `./tests`.

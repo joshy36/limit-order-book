@@ -5,7 +5,7 @@ CXX      = clang++
 CXXFLAGS = -g3  -std=c++11 -Wall -Wextra  -Wpedantic -Wshadow
 LDFLAGS  = -g3
 
-run: main.o OrderBook.o Limit.o Order.o
+tests: tests.o OrderBook.o Limit.o Order.o
 	${CXX} -o $@ $^
 
 OrderBook.o:     OrderBook.cpp OrderBook.h

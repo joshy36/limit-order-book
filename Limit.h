@@ -17,6 +17,8 @@ class Limit {
         Limit(double _limitPrice);
         ~Limit();
 
+        bool operator==(const Limit& other) const;
+
         double            getPrice()  const;
         double            getVol()    const;
         std::list<Order>* getOrders() const;

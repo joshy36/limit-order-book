@@ -25,6 +25,16 @@ Limit::~Limit()
 }
 
 /*
+ * equal to operator overload
+ * Purpose: Determine whether two limits are equal.
+ * Parameters: A const Limit reference.
+ * Returns: A boolean value that is true iff the Limit instances are the same.
+ */
+bool Limit::operator==(const Limit& other) const {
+    return limitPrice == other.limitPrice;
+}
+
+/*
  * getter functions
  * Purpose: Provides access to get private data members.
  * Parameters: None.

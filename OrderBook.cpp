@@ -26,6 +26,8 @@ OrderBook::OrderBook()
  */
 OrderBook::~OrderBook()
 {
+    clearBook();
+
     delete sellSide;
     delete buySide;
     delete orders;
@@ -79,6 +81,10 @@ void OrderBook::cancelOrder(int idNumber)
         limits->at(o->getLimit())->removeOrder(*o);
         Limit *l = limits->at(o->getLimit());
         if (l->getOrders()->size() == 0) {
+            if (l == bestBid)
+                bestBid = nullptr;
+            else if (l == bestOffer)
+                bestOffer = nullptr;
             // remove limit from correct tree
             if (o->getBuyOrSell() == Order::BUY)
                 buySide->erase(l->getPrice());
@@ -87,7 +93,10 @@ void OrderBook::cancelOrder(int idNumber)
             // remove limit from map
             limits->erase(l->getPrice());
             delete l;
-            // heap stuff
+            if (bestBid == nullptr)
+                bestBid = buySide->begin()->second;
+            else if (bestOffer == nullptr)
+                bestOffer = sellSide->rbegin()->second;
         }
         orders->erase(idNumber);
         delete o;
@@ -105,10 +114,21 @@ void OrderBook::cancelOrder(int idNumber)
  */
 void OrderBook::clearBook()
 {
+    for (auto& entry : *orders) {
+        delete entry.second;
+        entry.second = nullptr;
+    }
+
+    for (auto& entry : *limits) {
+        delete entry.second;
+        entry.second = nullptr;
+    }
+
     sellSide->clear();
     buySide->clear();
     orders->clear();
     limits->clear();
+    
     bestBid   = nullptr;
     bestOffer = nullptr;
 }

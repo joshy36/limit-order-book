@@ -2,6 +2,7 @@
 #include <fstream>
 #include <chrono>
 #include <ctime>
+#include <cmath>
 
 #include "OrderBook.h"
 #include "Order.h"
@@ -119,14 +120,18 @@ void testGetters()
     book.addOrder(orderGenerator(Order::SELL, 5, 2.9));
     std::cout << "Best Bid:   " << book.getBestBid()->getPrice() << std::endl;
     std::cout << "Best Offer: " << book.getBestOffer()->getPrice() << std::endl;
+    book.cancelOrder(2);
+    book.cancelOrder(3);
+    std::cout << "Best Bid:   " << book.getBestBid()->getPrice() << std::endl;
+    std::cout << "Best Offer: " << book.getBestOffer()->getPrice() << std::endl;
 }
 
 int main()
 {
-    // testAddClear();
-    // stressTestAdd(std::pow(10,7), true);
-    // stressTestAdd(std::pow(10,7), false);
-    // testCancel();
+    testAddClear();
+    stressTestAdd(std::pow(10,4), true);
+    stressTestAdd(std::pow(10,4), false);
+    testCancel();
     testGetters();
     return 0;
 }

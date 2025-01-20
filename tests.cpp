@@ -53,38 +53,33 @@ void stressTestAdd(int num, bool oneLimit)
 {
     OrderBook book;
 
-    std::ofstream outputFile;
+    std::ofstream outputFile("testOutput.txt", std::ios::app);
     if (oneLimit)
-        outputFile.open("oneLimit.txt");
+        outputFile << "Add at one Limit" << std::endl;
     else
-        outputFile.open("multipleLimits.txt");
-
+        outputFile << "Add at multiple Limits" << std::endl;
     if (!outputFile.is_open()) {
         std::cout << "Failed to open the output file." << std::endl;
         exit(0);
     }
 
-    outputFile << "Orders Time(s)" << std::endl;
+    outputFile << "Time(s)" << std::endl;
     for (int i = 1; i <= num; i *= 10) {
         auto start = std::chrono::system_clock::now();
-
         for (int j = 1; j <= i; j++) {
             if (oneLimit)
                 book.addOrder(orderGenerator(Order::BUY, 1, 1));
             else
                 book.addOrder(orderGenerator(Order::BUY, 1, j));
         }
-
         auto end = std::chrono::system_clock::now();
         std::chrono::duration<double> elapsed = end - start;
-
-        outputFile << i << " " << std::fixed << elapsed.count() << std::defaultfloat << std::endl;
+        outputFile << std::fixed << elapsed.count() << std::defaultfloat << std::endl;
+        book.clearBook();
+        resetOrders();
     }
 
     outputFile.close();
-    // book.printLimit();
-
-    resetOrders();
 }
 
 void testCancel()
@@ -103,6 +98,42 @@ void testCancel()
     book.printLimit();
     std::cout << "Volume at 7.9:  " << book.getVolumeAtLimit(7.9) << std::endl;
     resetOrders();
+}
+
+void stressTestCancel(int num, bool oneLimit) 
+{
+    OrderBook book;
+
+    std::ofstream outputFile("testOutput.txt", std::ios::app);
+    if (oneLimit)
+        outputFile << "Cancel at one Limit" << std::endl;
+    else
+        outputFile << "Cancel at multiple Limits" << std::endl;
+    if (!outputFile.is_open()) {
+        std::cout << "Failed to open the output file." << std::endl;
+        exit(0);
+    }
+
+    outputFile << "Time(s)" << std::endl;
+    for (int i = 1; i <= num; i *= 10) {
+
+        for (int j = 1; j <= i; j++) {
+            if (oneLimit)
+                book.addOrder(orderGenerator(Order::BUY, 1, 1));
+            else
+                book.addOrder(orderGenerator(Order::BUY, 1, j));
+        }
+        auto start = std::chrono::system_clock::now();
+        for (int j = i-1; j >= 0; j--)
+            book.cancelOrder(j);
+        auto end = std::chrono::system_clock::now();
+        std::chrono::duration<double> elapsed = end - start;
+        outputFile << std::fixed << elapsed.count() << std::defaultfloat << std::endl;
+        book.clearBook();
+        resetOrders();
+    }
+
+    outputFile.close();
 }
 
 void testGetters()
@@ -124,14 +155,24 @@ void testGetters()
     book.cancelOrder(3);
     std::cout << "Best Bid:   " << book.getBestBid()->getPrice() << std::endl;
     std::cout << "Best Offer: " << book.getBestOffer()->getPrice() << std::endl;
+    book.clearBook();
+    std::cout << "Best Bid:   " << book.getBestBid() << std::endl;
+    std::cout << "Best Offer: " << book.getBestOffer() << std::endl;
 }
 
 int main()
 {
+    int power = std::pow(10, 4);
+    std::ofstream outputFile("testOutput.txt", std::ios::trunc);
+    outputFile << "Operation Amounts" << std::endl;
+    for (int i = 1; i <= power; i *= 10)
+        outputFile << i << std::endl;
     testAddClear();
-    stressTestAdd(std::pow(10,4), true);
-    stressTestAdd(std::pow(10,4), false);
+    stressTestAdd(power, true);
+    stressTestAdd(power, false);
     testCancel();
+    stressTestCancel(power, true);
+    stressTestCancel(power, false);
     testGetters();
     return 0;
 }

@@ -93,9 +93,9 @@ void OrderBook::cancelOrder(int idNumber)
             // remove limit from map
             limits->erase(l->getPrice());
             delete l;
-            if (bestBid == nullptr)
+            if (buySide->size() != 0 and bestBid == nullptr)
                 bestBid = buySide->begin()->second;
-            else if (bestOffer == nullptr)
+            else if (sellSide->size() != 0 and bestOffer == nullptr)
                 bestOffer = sellSide->rbegin()->second;
         }
         orders->erase(idNumber);
@@ -128,7 +128,7 @@ void OrderBook::clearBook()
     buySide->clear();
     orders->clear();
     limits->clear();
-    
+
     bestBid   = nullptr;
     bestOffer = nullptr;
 }
@@ -181,7 +181,11 @@ void OrderBook::print() const
     for (const auto& pair : *sellSide)
         printOrderHelper(pair.second->getOrders(), columnWidth);
     std::cout << std::setfill('-') << std::setw(columnWidth * 4 + 2) << "" 
-              << std::setfill(' ') << " Print Spread here" << std::endl;
+            << std::setfill(' ');
+    if (bestOffer != nullptr and bestBid != nullptr)
+        std::cout  << " Spread: " << bestOffer->getPrice() - bestBid->getPrice() << std::endl;
+    else
+        std::cout << std::endl;
     for (const auto& pair : *buySide)
         printOrderHelper(pair.second->getOrders(), columnWidth);
     std::cout << std::setfill('-') << std::setw(columnWidth * 4 + 2) << "" 
@@ -204,7 +208,11 @@ void OrderBook::printLimit() const
     for (const auto& pair : *sellSide) 
         printLimitHelper(pair.second, columnWidth);
     std::cout << std::setfill('-') << std::setw(columnWidth * 2 + 2) << "" 
-              << std::setfill(' ') << " Print Spread here" << std::endl;
+            << std::setfill(' ');
+    if (bestOffer != nullptr and bestBid != nullptr)
+        std::cout  << " Spread: " << bestOffer->getPrice() - bestBid->getPrice() << std::endl;
+    else
+        std::cout << std::endl;
     for (const auto& pair : *buySide) 
         printLimitHelper(pair.second, columnWidth);
     std::cout << std::setfill('-') << std::setw(columnWidth * 2 + 2) 
@@ -224,9 +232,6 @@ void OrderBook::printOrderHelper(const std::list<Order>* list, int columnWidth) 
 
 void OrderBook::printLimitHelper(const Limit* limit, int columnWidth) const
 {
-    std::string red = "\033[31m";
-    std::string green = "\033[32m";
-    std::string reset = "\033[0m";
     std::cout << std::setw(columnWidth) << limit->getPrice() << "| "
               << std::setw(columnWidth) << limit->getVol()   << "| "
               << std::endl;

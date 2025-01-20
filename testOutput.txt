@@ -1,0 +1,34 @@
+Operation Amounts
+1
+10
+100
+1000
+10000
+Add at one Limit
+Time(s)
+0.000013
+0.000017
+0.000088
+0.000755
+0.007652
+Add at multiple Limits
+Time(s)
+0.000025
+0.000079
+0.000750
+0.007622
+0.077250
+Cancel at one Limit
+Time(s)
+0.000003
+0.000011
+0.000156
+0.007767
+0.668011
+Cancel at multiple Limits
+Time(s)
+0.000003
+0.000016
+0.000268
+0.001750
+0.019020
